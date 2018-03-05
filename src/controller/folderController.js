@@ -67,7 +67,8 @@ module.exports = class folderController extends controller {
     }
 
     getFiles(vm) {
-        new folderService().getFileAndFoldersByFolderId(vm.folderId, vm.sortType, parseInt(vm.isAsc), vm.searchKey).then(result => {
+        (vm.type === "disk" ? new diskService().getSubFoldersById(vm.folderId, vm.sortType, parseInt(vm.isAsc), vm.searchKey) :
+            new folderService().getFileAndFoldersByFolderId(vm.folderId, vm.sortType, parseInt(vm.isAsc), vm.searchKey)).then(result => {
             var files = result.map(item => {
                 item.version = item.type === 2 ? "" : `${item.version}.0`;
                 item.size = item.type === 2 ? "" : $.convert.toFileSize(item.size);
@@ -82,9 +83,26 @@ module.exports = class folderController extends controller {
                     }
                 }
                 item.fileType = fileType;
+                item.action = this._getActions(item);
                 return item;
             });
             this.json(files);
         })
+    }
+
+    _getActions(fileOrFolder) {
+        var actions = [];
+        var extname = "";
+        if (fileOrFolder.type === 1) {
+            var names = fileOrFolder.name.split(".");
+            extname = names.length > 1 ? names[names.length - 1] : "";
+        }
+        var openConfig = $.config.getOpenTypeConfig(extname);
+        actions.push({
+            type: "open",
+            isEnable: openConfig != undefined && openConfig != null,
+            config: openConfig,
+        });
+        return actions;
     }
 }

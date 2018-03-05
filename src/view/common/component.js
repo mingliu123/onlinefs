@@ -1,7 +1,7 @@
  $.component = (function() {
      var template = (function() {
          return {
-             compile: function(template, data, attr, key) {
+             compile: function(template, data, attr, slots, key) {
 
                  // functionBody = "var html = '';";
                  // functionBody += "html +='" + template;
@@ -14,7 +14,7 @@
                  });
                  functionBody = "var html = '" + functionBody + "';return html;";
                  // var data = { options: [1, 2, 3, 4, 5, 6, 7] };
-                 return html = new Function("state", "attr", functionBody)(data, attr);
+                 return html = new Function("state", "attr", "slots", functionBody)(data, attr, slots); //匿名函数，functionBody :函数体
              }
          }
      })();
@@ -36,7 +36,25 @@
                                  currentComponent.attr[currentElement.attributes[attrKey].name] = currentElement.attributes[attrKey].value;
                              }
                          }
-                         var innerHTML = template.compile(currentComponent.template, currentComponent.state, currentComponent.attr, key);
+
+                         //获取当前元素中的slot
+                         var slotElements = currentElement.getElementsByTagName("slot");
+                         var slots = [];
+                         for (var n in slotElements) { //把html中的信息（属性）读取出来
+                             if (slotElements[n].nodeType === 1) {
+                                 var slot = {};
+                                 for (var attrKey in slotElements[n].attributes) {
+                                     if (slotElements[n].attributes[attrKey].nodeType === 2) {
+                                         slot[slotElements[n].attributes[attrKey].name] = slotElements[n].attributes[attrKey].value;
+                                     }
+                                 }
+                                 slots.template = slotElements[n].innerHTML; //{{value}}
+                                 slots.push(slot);
+                             }
+                         }
+                         currentComponent.slots = slots; //增加属性
+
+                         var innerHTML = template.compile(currentComponent.template, currentComponent.state, currentComponent.attr, currentComponent.slots, key);
                          currentElement.innerHTML = innerHTML; //显示ui
                          currentComponent.key = key;
                          window[key] = currentComponent;
@@ -48,7 +66,7 @@
                              currentComponent.refresh();
                          }
                          currentComponent.refresh = function() { //更新UI
-                             var innerHTML = template.compile(currentComponent.template, currentComponent.state, currentComponent.attr, key);
+                             var innerHTML = template.compile(currentComponent.template, currentComponent.state, currentComponent.attr, currentComponent.slots, key);
                              currentElement.innerHTML = innerHTML;
                          }
                          $.component[currentElement.id] = currentComponent;
@@ -238,17 +256,16 @@
                             {%if(attr.isindex){%}\
                                 <th width='34px' ></th>\
                              {%}%}\
-                                {%var columns = JSON.parse(attr.columns);%}\
-                                {%for(var i in columns){%}\
-                                    <th width='{{columns[i].width}}%' class='\
-                                        {%if(columns[i].isSort){%}\
+                                {%for(var i in slots){%}\
+                                    <th width='{{slots[i].width}}%' class='\
+                                        {%if(slots[i].isSort){%}\
                                             onlinefs-datagrid-isSort\
                                         {%}%}\
                                     '\
-                                         {%if(columns[i].isSort){%}\
+                                         {%if(slots[i].isSort){%}\
                                             onclick='$.sort({{i}})'\
                                         {%}%}\
-                                    >{{columns[i].title}}\
+                                    >{{slots[i].title}}\
                                         {%if(state.sortColumn.index == i){%}\
                                             {%if(state.sortColumn.isAsc){%}\
                                                 <img src='/common/images/common-sort-asc.png' class='onlinefs-datagrid-sort-img'/>\
@@ -326,9 +343,9 @@
                     </div>",
          state: {
              fields: [
-                 { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" },
-                 { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" },
-                 { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" },
+                 //  { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" },
+                 //  { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" },
+                 //  { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" }, { name: "应用程序" },
              ],
              currentField: { name: "" },
              isshowChoose: false
@@ -344,8 +361,9 @@
          choose: function(index) {
              this.setState({
                  currentField: this.state.fields[index]
-             })
-
+             });
+             this[this.attr.choose](this.state.fields[index]);
+             this.showChoose();
          }
 
      }

@@ -1,6 +1,8 @@
 (function() {
     var currentFolderId = 0;
     var currentSearchKey = "";
+    var currentFiles = "";
+    var currentType = "disk";
     $.component(function() {
         return {
             tagname: "onlinefs-title",
@@ -43,9 +45,9 @@
     $.event.register("manager", function(folder) {
         var folderId = folder.id;
         currentFolderId = folder.id;
-        var type = folder.type;
+        currentType = folder.type;
         $.component.loading.enable();
-        $.http.get($.string.format("/getFolderInfo?folderId={{folderId}}&type={{type}}", { folderId: folderId, type: type }), function(result) {
+        $.http.get($.string.format("/getFolderInfo?folderId={{folderId}}&type={{type}}", { folderId: folderId, type: currentType }), function(result) {
             $.component.title.setState({
                 title: result.find(function(item) {
                     return item.isActive;
@@ -55,29 +57,43 @@
                 navs: result
             });
 
-            getFiles(folderId, 0, 0, currentSearchKey);
+            getFiles(folderId, 0, 0, currentSearchKey, currentType);
 
             $.component.loading.disable();
         });
     })
 
-    function getFiles(folderId, sortType, isAsc, searchKey) {
+    function getFiles(folderId, sortType, isAsc, searchKey, type) {
         $.component.loading.enable();
-        $.http.get($.string.format("/getFiles?folderId={{folderId}}&sortType={{sortType}}&isAsc={{isAsc}}&searchKey={{searchKey}}", { folderId: folderId, sortType: sortType, isAsc: isAsc, searchKey: searchKey }), function(result) {
+        $.http.get($.string.format("/getFiles?folderId={{folderId}}&sortType={{sortType}}&isAsc={{isAsc}}&searchKey={{searchKey}}&type={{type}}", { folderId: folderId, sortType: sortType, isAsc: isAsc, searchKey: searchKey, type: type }), function(result) {
             $.component.files.setState({
                 rows: result
             })
 
+            var fileType = result.map(function(item) {
+                return { name: item.fileType };
+            })
+            currentFiles = result;
+            $.component.typeFilter.setState({ fields: fileType });
             $.component.loading.disable();
         })
     }
 
     $.component.files.fileSort = function(sortColumn) {
-        getFiles(currentFolderId, sortColumn.index + 1, sortColumn.isAsc ? 1 : 0, currentSearchKey);
+        getFiles(currentFolderId, sortColumn.index + 1, sortColumn.isAsc ? 1 : 0, currentSearchKey, currentType);
     }
 
     $.component.search.fileSearch = function(value) {
         currentSearchKey = value
-        getFiles(currentFolderId, 0, 0, value, );
+        getFiles(currentFolderId, 0, 0, value, currentType);
+    }
+    $.component.typeFilter.filterFileType = function(type) {
+        var newRows = currentFiles.filter(function(item) {
+            return item.fileType === type.name
+        })
+        $.component.files.setState({
+            rows: newRows
+        });
+
     }
 })();

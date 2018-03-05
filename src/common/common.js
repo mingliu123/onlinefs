@@ -1,4 +1,5 @@
 const Base64 = require('js-base64').Base64;
+const openTypeConfig = require("../config/opentypeconfig");
 var $ = {};
 $.string = { //后台解密
     secretkey: "1qaz2wsxE",
@@ -30,4 +31,14 @@ $.convert = {
 
     }
 }
+
+$.config = {
+    getOpenTypeConfig: function(extname) { //通过扩展名获取能够打开的文件
+        var config = openTypeConfig.find(item => {
+            return item.extname === extname
+        });
+        return config;
+    }
+}
+
 module.exports = $;
