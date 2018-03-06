@@ -83,7 +83,7 @@ module.exports = class folderController extends controller {
                     }
                 }
                 item.fileType = fileType;
-                item.action = this._getActions(item);
+                item.actions = this._getActions(item);
                 return item;
             });
             this.json(files);

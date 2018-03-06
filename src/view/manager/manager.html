@@ -35,13 +35,13 @@
         "width":15,
         "isSort":false
     }]'-->
-    <slot title="文件夹" width='30' isSort="true">{{value}}</slot>
-    <slot title="大小" width='10' isSort="true">{{value}}</slot>
-    <slot title="类型" width='10' isSort="true">{{value}}</slot>
-    <slot title="版本" width='10' isSort="true">{{value}}</slot>
-    <slot title="修改者" width='10' isSort="true">{{value}}</slot>
-    <slot title="修改时间" width='15' isSort="true">{{value}}</slot>
-    <slot title="操作" width='15' isSort="false">
+    <slot title="文件夹" width='30' isSort="true" model="name">{{value}}</slot>
+    <slot title="大小" width='10' isSort="true" model="size">{{value}}</slot>
+    <slot title="类型" width='10' isSort="true" model="type">{{value}}</slot>
+    <slot title="版本" width='10' isSort="true" model="version">{{value}}</slot>
+    <slot title="修改者" width='10' isSort="true" model="modifyBy">{{value}}</slot>
+    <slot title="修改时间" width='15' isSort="true" model="modifyTime">{{value}}</slot>
+    <slot title="操作" width='15' isSort="false" model="actions">
         {%for(var i in value){%} {%if(value[i].isEnable){%}
         <img src="/manager/images/manager-{{value[i].type}}.png" /> {%}%} {%}%}
     </slot>
