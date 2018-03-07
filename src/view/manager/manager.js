@@ -94,6 +94,16 @@
         $.component.files.setState({
             rows: newRows
         });
+    }
 
+    window.openFile = function(url, id) {
+        var dialog = new $.dialog({
+            id: "onlinfsopenfile",
+            title: "打开文件",
+            isFooter: false,
+            innerHTML: "<iframe class='onlinefs-manager-openfile' src='" + url + " '></iframe>",
+
+        });
+        dialog.show();
     }
 })();

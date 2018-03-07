@@ -93,15 +93,18 @@ $.dialog.prototype = {
                 <div>\
                     {{state.innerHTML}}\
                  </div>\
-                <div>\
-                    <button onClick='$.submit()'>{{state.button}}</button>\
-                </div>\
+                {%if(state.isFooter){%}\
+                    <div>\
+                     <button onClick='$.submit()'>{{state.button}}</button>\
+                     </div>\
+                {%}%}\
              </div>\
                 <div class = 'onlinefs-dailog-model'></div>",
                     state: {
                         title: self.option.title ? self.option.title : "",
                         button: self.option.button ? self.option.button : "",
                         innerHTML: self.option.innerHTML ? self.option.innerHTML : "",
+                        isFooter: self.option.isFooter === undefined || self.option.isFooter ? true : false,
                     },
                     vm: {
                         isMove: false,

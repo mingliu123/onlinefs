@@ -77,7 +77,7 @@ module.exports = class folderController extends controller {
                 if (item.type === 1 && item.fileType === null) {
                     var name = item.name.split(".");
                     if (name.length > 1) {
-                        fileType = name[length - 1];
+                        fileType = name[name.length - 1];
                     } else {
                         fileType = "文件";
                     }
@@ -102,6 +102,7 @@ module.exports = class folderController extends controller {
             type: "open",
             isEnable: openConfig != undefined && openConfig != null,
             config: openConfig,
+            id: fileOrFolder.id
         });
         return actions;
     }
