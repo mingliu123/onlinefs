@@ -16,15 +16,18 @@
         var lineCount = getContextLineCount();
         setIndex(lineCount);
     })
-    var lineCount = getContextLineCount(id);
+    var lineCount = getContextLineCount();
     setIndex(lineCount);
 
-    function getFileContext() {
+    function getFileContext(id) {
+        $.component.loading.enable();
         $.http.get("/getFileContext?type=txt&id=" + id, function(result) {
-            $.selector(".onlinefs-opentxt-index").innerHTML = result;
+            $.selector(".onlinefs-opentxt-body").innerHTML = result;
             setIndex(0); //将索引变成0，使body 的内容不随索引而改变
             var lineCount = getContextLineCount();
             setIndex(lineCount);
         }, "json", "html")
+        $.component.loading.disable();
     }
+    getFileContext($.queryString.id);
 })();

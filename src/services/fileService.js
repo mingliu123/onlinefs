@@ -1,11 +1,12 @@
-import { resolve } from "dns";
-
 const sqlHelper = require("../common/sqlHelper");
 module.exports = class fileService {
     constructor() {}
     getFileById(id) {
         return new Promise((resolve, reject) => {
-            sqlHelper.query(`select * from onlinefs_files where id=${id}`).then(result => {
+            sqlHelper.query(`select CONCAT(onlinefs_folders.path,'\\\\',onlinefs_files.id,'.onlinefs') as name,domain,username,password
+              from onlinefs_files join onlinefs_folders on folderId = onlinefs_folders.id
+                            join onlinefs_disks on diskId = onlinefs_disks.id
+                             where onlinefs_files.id=${id}`).then(result => {
                 resolve(result[0]);
             })
         })

@@ -238,3 +238,16 @@ $.page = { //加载并渲染
 
     }
 }
+
+$.queryString = (function() {
+    var url = window.location.href;
+    var urls = url.split("?");
+    var result = {}
+    if (urls.length > 1) {
+        urls[1].split("&").forEach(function(item) {
+            var items = item.split("=");
+            result[items[0]] = items[1];
+        })
+    }
+    return result;
+})();

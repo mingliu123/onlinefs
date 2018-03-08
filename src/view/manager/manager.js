@@ -101,7 +101,7 @@
             id: "onlinfsopenfile",
             title: "打开文件",
             isFooter: false,
-            innerHTML: "<iframe class='onlinefs-manager-openfile' src='" + url + " '></iframe>",
+            innerHTML: "<iframe class='onlinefs-manager-openfile' src='" + url + "?id=" + id + " '></iframe>",
 
         });
         dialog.show();

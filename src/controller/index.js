@@ -3,6 +3,5 @@ const commonController = require("./commonController");
 const folderController = require("./folderController");
 const diskController = require("./diskController");
 const fileController = require("./fileController");
-const fileController = require("./fileController");
-const fileController = require("./fileController");
+
 module.exports = { userController, commonController, folderController, diskController, fileController };
