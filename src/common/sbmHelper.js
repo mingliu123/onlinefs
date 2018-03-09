@@ -32,5 +32,9 @@ module.exports = {
                     }
                 })
         })
+    },
+
+    readFileStream: function(filename, domain, username, password) {
+        return fs.readReadStream(filename)
     }
 }
