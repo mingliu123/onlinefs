@@ -400,7 +400,7 @@ $.component(function() {
                     </div>",
         state: {},
         vm: {
-
+            value: "",
         },
         controller: function() {},
         onInputChanged: function(value) {
@@ -409,5 +409,131 @@ $.component(function() {
         search: function() {
             this[this.attr.search](this.vm.value)
         }
+    }
+})
+
+$.component(function() {
+    return {
+        tagname: "onlinefs-tabs",
+        template: "<div>\
+                    <div>\
+                        <ul>\
+                            {%for(var i in slots){%}\
+                                {%if(i==state.currentIndex){%}\
+                                    <li class='active'>{{slots[i].title}}</li>\
+                                {%}else{%}\
+                                     <li onclick=$.switch({{i}})>{{slots[i].title}}</li>\
+                                {%}%}\
+                            {%}%}\
+                        </ul>\
+                        <div class='clear'></div>\
+                    </div>\
+                    <div>\
+                        {%for(var i in slots){%}\
+                            {%if(i==state.currentIndex){%}\
+                               {{$$.template.slot(slots[i].template,state)}}\
+                            {%}%}\
+                        {%}%}\
+                    </div>\
+                </div>",
+        state: {
+            currentIndex: 0,
+        },
+        controller: function() {},
+        switch: function(index) {
+            this.setState({
+                currentIndex: index,
+            })
+        }
+    }
+})
+$.component(function() {
+    return {
+        tagname: "onlinefs-steps",
+        template: "<div>\
+                    <div class='onlinefs-steps-number'>1</div>\
+                    <div class='onlinefs-steps-line'><hr /></div>\
+                    <div class='onlinefs-steps-number'>2</div>\
+                    <div class='onlinefs-steps-line'><hr /></div>\
+                    <div class='onlinefs-steps-number'>3</div>\
+                    <div class='clear'></div>\
+                 </div>",
+        state: {
+
+        },
+        controller: function() {
+
+        }
+    }
+})
+
+$.component(function() {
+    return {
+        tagname: "onlinefs-file",
+        template: "<div>\
+                        <input type='text' readonly value='{{state.value}}' />\
+                        <button>{{attr.title}}</button>\
+                        <input type='file' onChange='$.chooserFile(this.value)'/>\
+                    </div>",
+        state: {
+            value: "",
+        },
+        controller: function() {},
+        chooserFile: function(value) {
+            this.setState({
+                value: value
+            })
+        }
+    }
+})
+
+$.component(function() {
+    return {
+        tagname: "onlinefs-input",
+        template: "<div>\
+                        <input type='text'  />\
+                        <button>{{attr.title}}</button>\
+                    </div>",
+        state: {
+
+        },
+        controller: function() {},
+        chooserFile: function(value) {
+
+        }
+    }
+})
+$.component(function() {
+    return {
+        tagname: "onlinefs-textarea",
+        template: "<div>\
+                    <div>{{attr.title}}</div>\
+                    <div contenteditable></div>\
+                </div>",
+        state: {},
+        controller: function() {}
+    }
+})
+
+$.component(function() {
+    return {
+        tagname: "onlinefs-list",
+        template: "<div>\
+                    <div>{{attr.title}}</div>\
+                    <div>\
+                        <ul>\
+                            {%for(var i in state.items){%}\
+                                <li>{{state.items[i].title}}</li>\
+                            {%}%}\
+                        </ul>\
+                    </div>\
+                </div>",
+        state: {
+            items: [{ title: "haha" }, { title: "haha" }, { title: "haha" },
+                { title: "haha" }, { title: "haha" }, { title: "haha" }, { title: "haha" }, { title: "haha" },
+                { title: "haha" }, { title: "haha" }, { title: "haha" }, { title: "haha" }, { title: "haha" }
+            ]
+        },
+        controller: function() {}
     }
 })

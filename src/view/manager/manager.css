@@ -48,3 +48,32 @@ onlinefs-title h1 {
 #onlinfsopenfile>div>div:last-child {
     padding: 0px;
 }
+
+.onlinefs-tabs-tab {
+    width: 100%;
+    height: 128px;
+    background: #ffffff;
+}
+
+.onlinefs-tabs-tab ul {
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+
+.onlinefs-tabs-tab ul li {
+    float: left;
+    width: 100px;
+    height: 100%;
+    text-align: center;
+    padding-top: 20px;
+    cursor: pointer;
+}
+
+.onlinefs-tabs-tab ul li span {
+    display: block;
+}
+
+onlinefs-upload {
+    width: 100%;
+}

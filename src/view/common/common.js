@@ -85,10 +85,17 @@ $.dialog.prototype = {
             $.component(function() {
                 return {
                     tagname: "onlinefs-dialog",
-                    template: "<div>\
+                    template: "<div\
+                                    {%if(state.isMax){%}\
+                                        style='width:{{state.size.width}}px;height:{{state.size.height}}px'\
+                                    {%}%}\
+                                >\
                 <div class='onlinefs-dialog-title'>\
                     <span>{{state.title}}</span>\
                      <img src='/common/images/common-close.png' onClick='$.close()' />\
+                     {%if(state.isMaxButton){%}\
+                         <img src='/common/images/common-max.png' onClick='$.max()' />\
+                    {%}%}\
                 </div>\
                 <div>\
                     {{state.innerHTML}}\
@@ -105,6 +112,9 @@ $.dialog.prototype = {
                         button: self.option.button ? self.option.button : "",
                         innerHTML: self.option.innerHTML ? self.option.innerHTML : "",
                         isFooter: self.option.isFooter === undefined || self.option.isFooter ? true : false,
+                        isMax: false,
+                        size: {},
+                        isMaxButton: self.option.isMaxButton || false,
                     },
                     vm: {
                         isMove: false,
@@ -136,11 +146,16 @@ $.dialog.prototype = {
                     initContent() {
                         var link = document.createElement("link");
                         link.href = self.option.style;
-                        link.rel = "stylesheet";
-                        this.node.appendChild(link);
+                        if (self.option.style) {
+                            link.rel = "stylesheet";
+                            this.node.appendChild(link);
+                        }
                         var script = document.createElement("script");
                         script.src = self.option.script;
-                        this.node.appendChild(script);
+                        if (self.option.script !== undefined) {
+                            this.node.appendChild(script);
+                        }
+
                     },
                     close: function() {
                         this.node.remove();
@@ -150,6 +165,18 @@ $.dialog.prototype = {
                             }
                         }
                         $.dialog.unsubsrcibe(self.option.id);
+                    },
+                    max: function() {
+                        var height = window.innerHeight;
+                        var width = window.innerWidth;
+                        var isMax = !this.state.isMax;
+                        this.setState({
+                            size: {
+                                height: height,
+                                width: width,
+                            },
+                            isMax: isMax
+                        })
                     },
                     submit: function() {
                         for (var i in $.dialog.subscribes) {

@@ -11,6 +11,7 @@ module.exports = [
     { url: /\/getFolderInfo$/, controller: "folderController", action: "getFolderInfo" },
     { url: /\/getFileContext$/, controller: "fileController", action: "getFileContext" },
     { url: /\/getFiles$/, controller: "folderController", action: "getFiles" },
+    { url: /\/getAudioList$/, controller: "fileController", action: "getAudioList" },
 
 
 ]

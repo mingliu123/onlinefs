@@ -1,0 +1,14 @@
+<video id="player" controls><video>
+<script src="https://cdn.bootcss.com/flv.js/1.4.2/flv.min.js"></script>
+<script>
+    var player = document.getElementById('player');
+    if (flvjs.isSupported()) {
+            var flvPlayer = flvjs.createPlayer({
+                type: 'flv',
+                url: '252.flv',
+                isLive:false
+            });
+            flvPlayer.attachMediaElement(player);
+            flvPlayer.load(); //加载
+        }
+</script>

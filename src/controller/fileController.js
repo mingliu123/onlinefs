@@ -16,8 +16,14 @@ module.exports = class folderController extends controller {
                     throw err;
                 })
             } else if (vm.type === "stream") {
-                this.stream(sbmHelper.readFileStream(file.name, file.domain, file.username, file.password));
+                this.stream(sbmHelper.readFileStream(file.name, file.domain, file.username, file.password), vm.contentType);
             }
+        })
+    }
+
+    getAudioList(vm) {
+        new fileService().getFilesByFileType(1, vm.pageIndex, vm.pageSize, vm.sortType, vm.isAsc == 1).then(result => {
+            this.json(result);
         })
     }
 }

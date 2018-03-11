@@ -1,6 +1,8 @@
 const session = require("./session");
 const $ = require("../common/common");
 const fs = require("fs");
+var streamLength = require("stream-length");
+
 module.exports = class controller {
     constructor(request, response) {
         this.request = request;
@@ -60,13 +62,20 @@ module.exports = class controller {
         this.response.end();
     }
 
-    stream(stream) {
-        stream.on("data", data => {
-            this.response.write(data)
-        });
-        stream.on("close", data => {
-            this.response.write(data);
-            this.response.end();
+    stream(stream, contentType) {
+        contentType = contentType || "application/octet-stream";
+        streamLength(stream).then(size => {
+            this.response.set("Content-type", contentType);
+            this.response.set("Content-Length", size);
+            this.response.set("Accept-Ranges", "bytes"); //是否允许断点续传
+            this.response.set("Content-Ranges", `byte 0-${size}/${size}`); //result是length
+            stream.on("data", data => {
+                this.response.write(data);
+            });
+            stream.on("end", () => { //流结束关闭响应
+                this.response.end();
+            })
         })
+
     }
 }

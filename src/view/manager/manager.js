@@ -42,6 +42,23 @@
         }
     });
 
+
+    $.component(function() {
+        return {
+            tagname: "onlinefs-upload",
+            template: "{{state.html}}",
+            state: {
+                html: "",
+            },
+            controller: function() {
+                $.page.load("/uploadFile/upload.html", "", function(html) {
+                    this.setState({
+                        html: html,
+                    });
+                }.bind(this))
+            }
+        }
+    })
     $.event.register("manager", function(folder) {
         var folderId = folder.id;
         currentFolderId = folder.id;
@@ -96,14 +113,31 @@
         });
     }
 
-    window.openFile = function(url, id) {
+    window.openFile = function(url, id, name) {
+        url = url.indexOf("?") > 0 ? url + "&" : url + "?";
         var dialog = new $.dialog({
             id: "onlinfsopenfile",
             title: "打开文件",
             isFooter: false,
-            innerHTML: "<iframe class='onlinefs-manager-openfile' src='" + url + "?id=" + id + " '></iframe>",
+            isMaxButton: true,
+            innerHTML: $.string.format("<iframe class='onlinefs-manager-openfile' src=' {{url}}id={{id}}&name={{name}}'></iframe>", { url: url, id: id, name: name }),
 
         });
         dialog.show();
+    }
+
+    window.upload = function() {
+        var dialog = new $.dialog({
+            id: "onlinfsupload",
+            title: "打开文件",
+            isFooter: true,
+            idMaxButton: false,
+            button: "下一步",
+            innerHTML: "<onlinefs-upload></onlinefs-upload>"
+        });
+        dialog.show();
+        for (var i in $.components) {
+            $.component($.components[i]);
+        }
     }
 })();
