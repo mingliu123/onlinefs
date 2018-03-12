@@ -146,12 +146,12 @@ $.component(function() {
         },
         controller: function() {},
         enable: function() {
-            this.vm.index++;
-            if (this.vm.index === 1) {
-                this.setState({
-                    isLoading: true
-                })
-            }
+            // this.vm.index++;
+            // if (this.vm.index === 1) {
+            //     this.setState({
+            //         isLoading: true
+            //     })
+            // }
         },
         disable: function() {
             this.vm.index--;
@@ -534,6 +534,20 @@ $.component(function() {
                 { title: "haha" }, { title: "haha" }, { title: "haha" }, { title: "haha" }, { title: "haha" }
             ]
         },
+        controller: function() {}
+    }
+})
+
+$.component(function() {
+    return {
+        tagname: "onlinefs-progressBar",
+        template: "<svg width='480' height='250' version='1.1'>\
+                    <circle cx='240' cy='130' r='120' fill='#4a8bc2' />\
+                    <path d='M240 130L240 10A120 120 0 0 1 360 130Z' fill='#22b14c' />\
+                    <circle cx='240' cy='130' r='90' fill='#ffffff' />\
+                    <text x='240' y='150' text-anchor='middle' fill='#4a8bc2' font-size='60'>52%</text>\
+                 </svg>",
+        state: {},
         controller: function() {}
     }
 })

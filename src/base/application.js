@@ -132,7 +132,7 @@ module.exports = class Application {
         })
     }
     start() {
-        this.setCheckAuthority();
+        // this.setCheckAuthority();
         this.setStatic();
         this.setGet();
         this.setJson();
